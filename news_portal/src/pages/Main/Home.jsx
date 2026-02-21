@@ -24,23 +24,7 @@ const Home = () => {
         })
     }
 
-    // Filter articles based on AND logic
-    // const filteredArticles = articles.filter((article) => {
-    //     const pubDate = new Date(article.pubDate);
 
-    //     return (
-    //         (!filters.author || article.author?.toLowerCase().includes(filters.author.toLowerCase())) &&
-    //         (!filters.language || article.language === filters.language) &&
-    //         (!filters.country || article.country?.includes(filters.country)) &&
-    //         (!filters.category || article.category?.includes(filters.category)) &&
-    //         (!filters.datatype || article.datatype === filters.datatype) &&
-    //         (!filters.search ||
-    //             article.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-    //             article.description?.toLowerCase().includes(filters.search.toLowerCase())) &&
-    //         (!filters.startDate || pubDate >= new Date(filters.startDate)) &&
-    //         (!filters.endDate || pubDate <= new Date(filters.endDate))
-    //     );
-    // });
 
     return (
         <div className="min-h-screen bg-gray-100">

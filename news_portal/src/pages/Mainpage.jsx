@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar/Navbar';
 import Home from './Main/Home';
+import NewsList from './Main/NewsList';
 
 const Mainpage = () => {
     return (

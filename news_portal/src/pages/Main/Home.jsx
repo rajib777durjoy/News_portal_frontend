@@ -1,158 +1,153 @@
 import React, { useState, useEffect } from "react";
-
-// Example dummy data (replace with backend API call)
-const dummyArticles = [
-  {
-    id: 1,
-    title: "AI Revolution in Tech Industry",
-    author: "John Doe",
-    pubDate: "2026-02-20",
-    source: "Tech News",
-    snippet: "AI is transforming the technology landscape rapidly...",
-    language: "English",
-    country: "US",
-    category: "Technology",
-    datatype: "News",
-  },
-  {
-    id: 2,
-    title: "Startup Ecosystem Growth in 2026",
-    author: "Jane Smith",
-    pubDate: "2026-02-19",
-    source: "Business Daily",
-    snippet: "Startups are booming due to AI and funding opportunities...",
-    language: "English",
-    country: "US",
-    category: "Business",
-    datatype: "Blog",
-  },
-];
+import AxiosPublic from "../../Hook/AxiosPublic";
 
 const Home = () => {
-  const [articles, setArticles] = useState([]);
-  const [filters, setFilters] = useState({
-    author: "",
-    language: "",
-    country: "",
-    category: "",
-    datatype: "",
-  });
+    const axiosPublic = AxiosPublic();
+    const [articles, setArticles] = useState([]);
+   const [text,settext]=useState('');
+   const [Startdate,setstartdata]=('');
+   const [enddate,setenddata]=('');
+  
 
-  useEffect(() => {
-    // Replace this with actual backend fetch
-    // setArticles(dummyArticles);
-  }, []);
+    useEffect(() => {
+        axiosPublic
+            .get("/api/newsList")
+            .then((res) => {
+                setArticles(res.data);
+            })
+            .catch((err) => console.log(err));
+    },[]);
+    const handleSearch=()=>{
+        axiosPublic.patch('/api/newsSearch',{text,Startdate,enddate}).then(res=>{
+        res.data;
+        setArticles(res?.data)
+        })
+    }
 
-  // Filter articles based on AND logic
-  const filteredArticles = articles.filter((article) => {
+    // Filter articles based on AND logic
+    // const filteredArticles = articles.filter((article) => {
+    //     const pubDate = new Date(article.pubDate);
+
+    //     return (
+    //         (!filters.author || article.author?.toLowerCase().includes(filters.author.toLowerCase())) &&
+    //         (!filters.language || article.language === filters.language) &&
+    //         (!filters.country || article.country?.includes(filters.country)) &&
+    //         (!filters.category || article.category?.includes(filters.category)) &&
+    //         (!filters.datatype || article.datatype === filters.datatype) &&
+    //         (!filters.search ||
+    //             article.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+    //             article.description?.toLowerCase().includes(filters.search.toLowerCase())) &&
+    //         (!filters.startDate || pubDate >= new Date(filters.startDate)) &&
+    //         (!filters.endDate || pubDate <= new Date(filters.endDate))
+    //     );
+    // });
+
     return (
-      (!filters.author || article.author === filters.author) &&
-      (!filters.language || article.language === filters.language) &&
-      (!filters.country || article.country === filters.country) &&
-      (!filters.category || article.category === filters.category) &&
-      (!filters.datatype || article.datatype === filters.datatype)
-    );
-  });
+        <div className="min-h-screen bg-gray-100">
+            {/* Navbar */}
+            <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
+                <h1 className="text-2xl font-bold">AI News Portal</h1>
+                <div>
+                    <button className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-400">
+                        Refresh
+                    </button>
+                </div>
+            </nav>
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <nav className="bg-blue-600 text-white p-4 flex justify-between">
-        <h1 className="text-2xl font-bold">AI News Portal</h1>
-        <div>
-          <button className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-400">
-            Refresh
-          </button>
-        </div>
-      </nav>
+            {/* Banner */}
+            <header className="bg-linear-gradient-to-r from-blue-400 to-indigo-500 text-white p-10 text-center">
+                <h2 className="text-3xl text-black font-bold my-4">
+                    Stay Ahead with AI-Powered News
+                </h2>
+                <p className="text-lg text-black mb-10">
+                    Curated articles from multiple sources, filtered to your preference.
+                </p>
+            </header>
 
-      {/* Banner */}
-      <header className="bg-linear-gradient-to-r from-blue-400 to-indigo-500 text-white p-10 text-center">
-        <h2 className="text-3xl font-bold mb-2">
-          Stay Ahead with AI-Powered News
-        </h2>
-        <p className="text-lg">
-          Curated articles from multiple sources, filtered to your preference.
-        </p>
-      </header>
+            {/* Main Content */}
+            <div className="w-[90%] mx-auto">
+                <div className="w-full bg-white p-6 rounded-lg shadow-md mx-auto mt-6 max-w-6xl">
+                    <h2 className="text-2xl font-bold mb-6 text-gray-900">Filter News</h2>
 
-      {/* Main Content */}
-      <div className="flex flex-col md:flex-row mt-6 px-4 md:px-10 gap-6">
-        {/* Sidebar Filters */}
-        <aside className="w-full md:w-1/4 bg-white p-4 rounded shadow">
-          <h3 className="font-bold mb-2">Filters</h3>
-          <div className="flex flex-col gap-3">
-            <input
-              type="text"
-              placeholder="Author"
-              className="border p-2 rounded"
-              value={filters.author}
-              onChange={(e) =>
-                setFilters({ ...filters, author: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Language"
-              className="border p-2 rounded"
-              value={filters.language}
-              onChange={(e) =>
-                setFilters({ ...filters, language: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Country"
-              className="border p-2 rounded"
-              value={filters.country}
-              onChange={(e) =>
-                setFilters({ ...filters, country: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Category"
-              className="border p-2 rounded"
-              value={filters.category}
-              onChange={(e) =>
-                setFilters({ ...filters, category: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Content Type"
-              className="border p-2 rounded"
-              value={filters.datatype}
-              onChange={(e) =>
-                setFilters({ ...filters, datatype: e.target.value })
-              }
-            />
-          </div>
-        </aside>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Search Input */}
+                        <div className="flex flex-col">
+                            <label className="mb-1 font-medium text-gray-700">Search</label>
+                            <input
+                                type="text"
+                                placeholder="Search by title or description"
+                                className="border text-black border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                value={text}
+                                onChange={(e) =>settext(e.target.value)}
+                            />
+                        </div>
+                        {/* Data Type */}
+                        
+                        {/* Start Date */}
+                        <div className="flex flex-col">
+                            <label className="mb-1 font-medium text-gray-700">Start Date</label>
+                            <input
+                                type="date"
+                                className="border text-black border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                value={Startdate}
+                                onChange={(e) =>setstartdata(e.target.value)}
+                            />
+                        </div>
 
-        {/* Article Feed */}
-        <main className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredArticles.map((article) => (
-            <div
-              key={article.id}
-              className="bg-white p-4 rounded shadow hover:shadow-lg transition"
-            >
-              <h3 className="font-bold text-lg mb-2">{article.title}</h3>
-              <p className="text-sm text-gray-500 mb-1">
-                By {article.author} | {article.pubDate}
-              </p>
-              <p className="text-sm text-gray-400 mb-2">{article.source}</p>
-              <p>{article.snippet}</p>
-              <p className="mt-2 text-xs text-gray-400">
-                {article.language} | {article.country} | {article.category} |{" "}
-                {article.datatype}
-              </p>
+                        {/* End Date */}
+                        <div className="flex flex-col">
+                            <label className="mb-1 font-medium text-gray-700">End Date</label>
+                            <input
+                                type="date"
+                                className="border text-black border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                value={enddate}
+                                onChange={(e) =>setenddata(e.target.value)}
+                            />
+                        </div>
+
+
+                        {/* Apply Button */}
+                        <div className="flex items-end md:col-span-3">
+                            <button
+                                onClick={() => handleSearch()}
+                                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 w-full md:w-1/3 mx-auto transition"
+                            >
+                                Apply Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Article Feed */}
+                <main className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {articles.map((article) => (
+                        <div
+                            key={article.article_id}
+                            className="bg-white p-4 rounded shadow hover:shadow-lg transition"
+                        >
+                            {article.image_url && (
+                                <img
+                                    src={article.image_url}
+                                    alt={article.title}
+                                    className="w-full h-40 object-cover rounded mb-2"
+                                />
+                            )}
+                            <h3 className="font-bold text-lg mb-1">{article.title}</h3>
+                            <p className="text-sm text-gray-500 mb-1">
+                                By {article.author || "Unknown"} | {new Date(article.pubDate).toLocaleString()}
+                            </p>
+                            <p className="text-sm text-gray-400 mb-2">{article.source || "Unknown"}</p>
+                            <p className="text-gray-700 mb-2">{article.description.slice(0, 100) || article.content}</p>
+                            <p className="mt-2 text-xs text-gray-400">
+                                {article.language} | {article.country?.join(", ")} | {article.category?.join(", ")} |{" "}
+                                {article.datatype}
+                            </p>
+                        </div>
+                    ))}
+                </main>
             </div>
-          ))}
-        </main>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default Home;
